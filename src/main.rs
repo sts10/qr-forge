@@ -4,8 +4,11 @@ use qrcode::QrCode;
 use std::io;
 
 fn main() {
-    let key =
-        rpassword::read_password_from_tty(Some("Enter the secret:\n")).expect("Error reading key");
+    let key: String = rpassword::read_password_from_tty(Some("Enter the secret key:\n"))
+        .expect("Error reading secret key")
+        .chars()
+        .filter(|&c| c != ' ')
+        .collect();
 
     println!("Enter name of service:");
     let service = gets().unwrap();
