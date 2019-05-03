@@ -1,3 +1,4 @@
+extern crate image;
 extern crate qrcode;
 extern crate rpassword;
 use byteorder::{BigEndian, ByteOrder};
@@ -5,6 +6,7 @@ use chrono::Local;
 use crypto::mac::Mac;
 use crypto::{hmac::Hmac, sha1::Sha1};
 use data_encoding::BASE32;
+use image::Luma;
 use qrcode::QrCode;
 use std::error::Error;
 use std::io::{self, ErrorKind};
@@ -36,12 +38,15 @@ pub fn display_qr_code(otpauth_uri: &str) -> Result<(), io::Error> {
     Ok(())
 }
 
-pub fn present_codes(key: &str) -> Vec<String> {
+pub fn present_codes(key: &str) -> Result<Vec<String>, Box<Error>> {
     let mut tokens: Vec<String> = vec![];
     for token_number in 0..7 {
-        tokens.push(generate_otp_token(key, token_number * 30).expect("Problem generating token"));
+        match generate_otp_token(key, token_number * 30) {
+            Ok(this_token) => tokens.push(this_token),
+            Err(e) => return Err(e),
+        }
     }
-    tokens
+    Ok(tokens)
 }
 fn generate_otp_token(key: &str, token_number: i64) -> Result<String, Box<Error>> {
     let now = Local::now().timestamp();
@@ -87,6 +92,15 @@ fn generate_otp_token(key: &str, token_number: i64) -> Result<String, Box<Error>
     Ok(format!("{:0length$}", modulo, length = 6))
 }
 
+pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, io::Error> {
+    let code = QrCode::new(otpauth_uri).unwrap();
+    // Render the bits into an image.
+    let image = code.render::<Luma<u8>>().build();
+    // Save the image.
+    let qr_code_file_path = "qr-code.png";
+    image.save(qr_code_file_path).unwrap();
+    Ok(qr_code_file_path)
+}
 pub fn gets(prompt: &str) -> io::Result<String> {
     println!("{}", prompt);
     let mut input = String::new();

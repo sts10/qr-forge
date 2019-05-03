@@ -9,5 +9,21 @@ fn main() {
 
     display_qr_code(&otpauth_uri).expect("Couldn't display QR code");
 
-    println!("Next couple of tokens: {:?}", present_codes(&key));
+    match present_codes(&key) {
+        Ok(codes) => println!("Next couple of tokens: {:?}", codes),
+        Err(e) => eprintln!("Error: {}", e),
+    }
+    let image_decision =
+        gets("Would you like to create an image file of this QR code? (y/N)").unwrap();
+    if image_decision == "y" {
+        match make_qr_code_image(&otpauth_uri) {
+            Ok(file_path) => println!(
+                "QR image file generated at {}. Be sure to delete it securely when done.",
+                file_path
+            ),
+            Err(e) => eprintln!("Error generating QR code image file: {}", e),
+        }
+    } else {
+        println!("OK, I won't create a file. All done");
+    }
 }

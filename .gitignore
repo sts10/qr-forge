@@ -2,3 +2,4 @@
 **/*.rs.bk
 /qr-codes/
 /qr-codes/*
+*.png
