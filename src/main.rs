@@ -80,10 +80,12 @@ fn generate_otp_token(key: &str, token_number: i64) -> Result<String, Box<Error>
         }
     };
     let offset = offset as usize;
-    let value = ((((result[offset]) as i32 & 0x7f) << 24)
-        | (((result[offset + 1]) as i32 & 0xff) << 16)
-        | (((result[offset + 2]) as i32 & 0xff) << 8)
-        | ((result[offset + 3]) as i32 & 0xff)) as i64;
+    let value = i64::from(
+        ((i32::from(result[offset]) & 0x7f) << 24)
+            | ((i32::from(result[offset + 1]) & 0xff) << 16)
+            | ((i32::from(result[offset + 2]) & 0xff) << 8)
+            | (i32::from(result[offset + 3]) & 0xff),
+    );
 
     let length = 6;
     let pow10: i64 = 10;
