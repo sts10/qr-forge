@@ -10,7 +10,10 @@ Know that [KeePassXC version 2.4.0 and beyond](https://keepassxc.org/) can gener
 
 Before I wrote this code, I wrote [a blog post](https://sts10.github.io/2018/11/26/totp-uris-qr-codes-2-factor.html) that might help you understand the problems I'm interested in here. 
 
-## Testing?
+## To Do 
 
-Not sure how. If you have ideas, create a PR or issue! 
+Add ability to generate a few 6-digit codes, allowing users to confirm everything went right. See [this function](https://github.com/Skarlso/totp/blob/master/src/generator.rs#L9) for clues on how to do this.
 
+### Testing?
+
+Not sure how to go about testing the functionality of this script as is. If you have ideas, create a PR or issue! 
