@@ -13,16 +13,19 @@ use std::io::{self, ErrorKind};
 
 pub fn get_key() -> String {
     loop {
+        // get key from user safely, then make it uppercase and remove spaces
         let key: String = rpassword::read_password_from_tty(Some("Enter the secret key:\n"))
             .expect("Error reading secret key")
+            .to_ascii_uppercase()
             .chars()
             .filter(|&c| c != ' ')
             .collect();
+        // test key for validity. If invalid, start loop again
         match test_key(&key) {
             Ok(()) => return key,
             Err(e) => {
                 eprintln!(
-                    "Key is not 32 characters or is otherwise invalid ({}). \nTry again.",
+                    "Key is not 32 characters or is otherwise invalid ({}).\nTry again.",
                     e
                 );
                 continue;
