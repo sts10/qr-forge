@@ -12,11 +12,23 @@ use std::error::Error;
 use std::io::{self, ErrorKind};
 
 pub fn get_key() -> String {
-    rpassword::read_password_from_tty(Some("Enter the secret key:\n"))
-        .expect("Error reading secret key")
-        .chars()
-        .filter(|&c| c != ' ')
-        .collect()
+    loop {
+        let key: String = rpassword::read_password_from_tty(Some("Enter the secret key:\n"))
+            .expect("Error reading secret key")
+            .chars()
+            .filter(|&c| c != ' ')
+            .collect();
+        match test_key(&key) {
+            Ok(()) => return key,
+            Err(e) => {
+                eprintln!(
+                    "Key is not 32 characters or is otherwise invalid ({}). \nTry again.",
+                    e
+                );
+                continue;
+            }
+        }
+    }
 }
 
 pub fn make_otpauth_uri(key: &str, service: String, username: String) -> String {
@@ -48,9 +60,21 @@ pub fn present_codes(key: &str) -> Result<Vec<String>, Box<Error>> {
     }
     Ok(tokens)
 }
-fn generate_otp_token(key: &str, token_number: i64) -> Result<String, Box<Error>> {
+fn test_key(key: &str) -> Result<(), Box<Error>> {
+    let secret_bytes = BASE32.decode(key.as_bytes());
+    match secret_bytes {
+        Ok(_bytes) => Ok(()),
+        Err(_) => Err(io::Error::new(
+            ErrorKind::InvalidInput,
+            "key is not a valid base32 data type",
+        )
+        .into()),
+    }
+}
+
+fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<Error>> {
     let now = Local::now().timestamp();
-    let timer = ((now + token_number) / 30) as u64;
+    let timer = ((now + future_seconds) / 30) as u64;
     let secret_bytes = BASE32.decode(key.as_bytes());
     let bytes = match secret_bytes {
         Ok(bytes) => bytes,
