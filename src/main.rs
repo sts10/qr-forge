@@ -7,7 +7,7 @@ fn main() {
     if args.len() > 1 {
         println!("The first argument is {}", args[1]);
         let codes = read_codes_from_file(&args[1]);
-        if codes.len() > 0 {
+        if !codes.is_empty() {
             println!("Discovered {} code(s):", codes.len());
             for code in codes {
                 println!("{}", code);
