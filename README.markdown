@@ -1,6 +1,6 @@
-# QR Encoder
+# QR Forge
 
-A Rust script to more safely generate a QR code from a 32-character TOTP secret key.
+A Rust script to more safely generate a QR code from a 32-character TOTP secret key. Can also read QR codes from image files.
 
 ## The problem this tries to solve
 
@@ -20,11 +20,15 @@ Honestly, I'm not sure. But I figure it's better than `qrencode -s 10 -o generat
 
 Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. If you can, I'd recommend using KeePassXC and not this script for managing your TOTP keys and QR codes.
 
-## Usage
+## Setup
 
 1. Install Rust
 2. Clone repo, `cd` into repo directory
-3. `cargo run`
+
+## Usage
+
+- To **encode** a secret and create a QR code, run `cargo run`
+- To **decode** a secret from an existing QR code image, run `cargo run -- <qr_code_image_file_path.png>`
 
 ![Demo](demo.png)
 
