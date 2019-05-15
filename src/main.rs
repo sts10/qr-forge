@@ -1,6 +1,14 @@
-use qrencoder::*;
+use qrforge::*;
+use std::env;
 
 fn main() {
+    let args: Vec<_> = env::args().collect();
+
+    if args.len() > 1 {
+        println!("The first argument is {}", args[1]);
+        read_codes_from_file(&args[1]);
+        return;
+    }
     let key: String = get_key();
     let service = gets("Enter name of service").unwrap();
     let username = gets("Enter username").unwrap();

@@ -1,6 +1,6 @@
 [package]
-name = "qrencoder"
-version = "0.1.3"
+name = "qrforge"
+version = "0.1.4"
 authors = ["sschlinkert <sam.schlinkert@turner.com>"]
 edition = "2018"
 
@@ -14,3 +14,4 @@ byteorder = "1"
 image = "*"
 # hex = "0.3.2"
 # openssl = "0.10.10"
+quirc = "0.0.1"

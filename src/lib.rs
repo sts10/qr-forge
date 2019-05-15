@@ -10,6 +10,12 @@ use image::Luma;
 use qrcode::QrCode;
 use std::error::Error;
 use std::io::{self, ErrorKind};
+extern crate quirc;
+
+use quirc::QrCoder;
+use std::fs::File;
+use std::io::Read;
+use std::str;
 
 pub fn get_key() -> String {
     loop {
@@ -128,11 +134,58 @@ pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, io::Error> {
     image.save(qr_code_file_path).unwrap();
     Ok(qr_code_file_path)
 }
+
+pub fn read_codes_from_file(file_path: &str) -> Vec<String> {
+    let mut file = File::open(file_path).expect("Unable to open file");
+
+    let mut vec = Vec::new();
+    file.read_to_end(&mut vec).unwrap();
+
+    let image = image::load_from_memory(&vec).unwrap().to_luma();
+
+    let mut quirc = QrCoder::new().unwrap();
+
+    let width = image.width();
+    let height = image.height();
+    let codes = quirc.codes(&image, width, height).unwrap();
+
+    let mut codes_as_strings: Vec<String> = vec![];
+
+    for code in codes {
+        codes_as_strings.push(String::from(
+            str::from_utf8(&code.unwrap().payload).unwrap(),
+        ));
+    }
+    codes_as_strings
+}
+
 pub fn gets(prompt: &str) -> io::Result<String> {
     println!("{}", prompt);
     let mut input = String::new();
     match io::stdin().read_line(&mut input) {
         Ok(_n) => Ok(input.trim_end_matches('\n').to_string()),
         Err(error) => Err(error),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn can_wrtie_and_read_a_qr_code_image_file() {
+        let key: String = "secretkeytest".to_string();
+        let service = "MySocialNetwork".to_string();
+        let username = "test_user".to_string();
+
+        let otpauth_uri = make_otpauth_uri(&key, service, username);
+
+        let qr_image_file_path = match make_qr_code_image(&otpauth_uri) {
+            Ok(file_path) => file_path,
+
+            Err(e) => panic!("Error generating QR code image file: {}", e),
+        };
+
+        let first_code = &read_codes_from_file(qr_image_file_path)[0];
+        assert_eq!(first_code, &otpauth_uri);
     }
 }
