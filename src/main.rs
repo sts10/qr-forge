@@ -5,15 +5,14 @@ fn main() {
     let args: Vec<_> = env::args().collect();
 
     if args.len() > 1 {
-        println!("The first argument is {}", args[1]);
-        let codes = read_codes_from_file(&args[1]);
-        if !codes.is_empty() {
-            println!("Discovered {} code(s):", codes.len());
-            for code in codes {
-                println!("{}", code);
+        match read_codes_from_file(&args[1]) {
+            Ok(codes) => {
+                println!("Discovered {} code(s):", codes.len());
+                for code in codes {
+                    println!("{}", code);
+                }
             }
-        } else {
-            eprintln!("error!");
+            Err(e) => eprintln!("Error: {}", e),
         }
         return;
     }

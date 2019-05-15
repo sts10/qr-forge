@@ -135,7 +135,7 @@ pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, io::Error> {
     Ok(qr_code_file_path)
 }
 
-pub fn read_codes_from_file(file_path: &str) -> Vec<String> {
+pub fn read_codes_from_file(file_path: &str) -> Result<Vec<String>, Box<Error>> {
     let mut file = File::open(file_path).expect("Unable to open file");
 
     let mut vec = Vec::new();
@@ -147,16 +147,33 @@ pub fn read_codes_from_file(file_path: &str) -> Vec<String> {
 
     let width = image.width();
     let height = image.height();
-    let codes = quirc.codes(&image, width, height).unwrap();
-
+    let codes = match quirc.codes(&image, width, height) {
+        Ok(codes) => codes,
+        Err(_) => {
+            return Err(
+                io::Error::new(ErrorKind::InvalidInput, "Error reading QR code image file").into(),
+            );
+        }
+    };
     let mut codes_as_strings: Vec<String> = vec![];
 
     for code in codes {
-        codes_as_strings.push(String::from(
-            str::from_utf8(&code.unwrap().payload).unwrap(),
-        ));
+        match code {
+            Ok(code) => codes_as_strings.push(qrcode_to_string(code)),
+            Err(_) => {
+                return Err(io::Error::new(
+                    ErrorKind::InvalidData,
+                    "Error reading data from QR code image file",
+                )
+                .into());
+            }
+        }
     }
-    codes_as_strings
+    Ok(codes_as_strings)
+}
+
+fn qrcode_to_string(code: quirc::QrCode) -> String {
+    String::from(str::from_utf8(&code.payload).expect("Error reading QR image payload"))
 }
 
 pub fn gets(prompt: &str) -> io::Result<String> {
@@ -172,7 +189,7 @@ pub fn gets(prompt: &str) -> io::Result<String> {
 mod tests {
     use super::*;
     #[test]
-    fn can_wrtie_and_read_a_qr_code_image_file() {
+    fn can_write_and_read_a_qr_code_image_file() {
         let key: String = "secretkeytest".to_string();
         let service = "MySocialNetwork".to_string();
         let username = "test_user".to_string();
@@ -185,7 +202,7 @@ mod tests {
             Err(e) => panic!("Error generating QR code image file: {}", e),
         };
 
-        let first_code = &read_codes_from_file(qr_image_file_path)[0];
+        let first_code = &read_codes_from_file(qr_image_file_path).unwrap()[0];
         assert_eq!(first_code, &otpauth_uri);
     }
 }
