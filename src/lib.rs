@@ -47,8 +47,11 @@ pub fn make_otpauth_uri(key: &str, service: String, username: String) -> String 
     )
 }
 
-pub fn display_qr_code(otpauth_uri: &str) -> Result<(), io::Error> {
-    let code = QrCode::new(otpauth_uri).unwrap();
+pub fn display_qr_code(otpauth_uri: &str) -> Result<(), qrcode::types::QrError> {
+    let code = match QrCode::new(otpauth_uri) {
+        Ok(code) => code,
+        Err(e) => return Err(e),
+    }; // .unwrap();
 
     let string = code
         .render::<char>()
@@ -125,8 +128,12 @@ fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<Erro
     Ok(format!("{:0length$}", modulo, length = 6))
 }
 
-pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, io::Error> {
-    let code = QrCode::new(otpauth_uri).unwrap();
+pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, qrcode::types::QrError> {
+    let code = match QrCode::new(otpauth_uri) {
+        Ok(code) => code,
+        Err(e) => return Err(e),
+    };
+    // let code = QrCode::new(otpauth_uri).unwrap();
     // Render the bits into an image.
     let image = code.render::<Luma<u8>>().build();
     // Save the image.
@@ -143,7 +150,14 @@ pub fn read_codes_from_file(file_path: &str) -> Result<Vec<String>, Box<Error>> 
 
     let image = image::load_from_memory(&vec).unwrap().to_luma();
 
-    let mut quirc = QrCoder::new().unwrap();
+    let mut quirc = match QrCoder::new() {
+        Ok(code) => code,
+        Err(_) => {
+            return Err(
+                io::Error::new(ErrorKind::InvalidInput, "Error reading QR code image file").into(),
+            );
+        }
+    };
 
     let width = image.width();
     let height = image.height();
