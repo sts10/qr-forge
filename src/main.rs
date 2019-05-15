@@ -6,10 +6,19 @@ fn main() {
 
     if args.len() > 1 {
         println!("The first argument is {}", args[1]);
-        read_codes_from_file(&args[1]);
+        let codes = read_codes_from_file(&args[1]);
+        if codes.len() > 0 {
+            println!("Discovered {} code(s):", codes.len());
+            for code in codes {
+                println!("{}", code);
+            }
+        } else {
+            eprintln!("error!");
+        }
         return;
     }
     let key: String = get_key();
+    // MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H
     let service = gets("Enter name of service").unwrap();
     let username = gets("Enter username").unwrap();
 
