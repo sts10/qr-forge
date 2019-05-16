@@ -28,7 +28,7 @@ Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can genera
 ## Usage
 
 - To **encode** a secret and create a QR code, run `cargo run`
-- To **decode** a secret from an existing QR code image, run `cargo run -- <qr_code_image_file_path.png>`
+- To **decode** a secret from an existing QR code image, run `cargo run -- -d=<qr_code_image_file_path.png>`
 
 ![Demo](demo/demo.png)
 

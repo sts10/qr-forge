@@ -1,11 +1,26 @@
+extern crate structopt;
 use qrforge::*;
-use std::env;
+use std::path::PathBuf;
+use structopt::StructOpt;
+
+/// QR Forge
+#[derive(StructOpt, Debug)]
+#[structopt(name = "qrforge")]
+struct Opt {
+    /// Encode QR code from text secret, service and username
+    #[structopt(short = "e", long = "encode")]
+    encode: bool,
+
+    /// Decode a QR code image file to an OTPauth URI
+    #[structopt(short = "d", long = "decode", parse(from_os_str))]
+    qr_image_file: Option<PathBuf>,
+}
 
 fn main() {
-    let args: Vec<_> = env::args().collect();
+    let opt = Opt::from_args();
 
-    if args.len() > 1 {
-        match read_codes_from_file(&args[1]) {
+    match opt.qr_image_file {
+        Some(qr_image_file) => match read_codes_from_file(&qr_image_file) {
             Ok(codes) => {
                 println!("Discovered {} code(s):", codes.len());
                 for code in codes {
@@ -13,33 +28,7 @@ fn main() {
                 }
             }
             Err(e) => eprintln!("Error: {}", e),
-        }
-        return;
-    }
-    let key: String = get_key();
-    // MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H
-    let service = gets("Enter name of service").unwrap();
-    let username = gets("Enter username").unwrap();
-
-    let otpauth_uri = make_otpauth_uri(&key, service, username);
-
-    display_qr_code(&otpauth_uri).expect("Couldn't display QR code");
-
-    match present_codes(&key) {
-        Ok(codes) => println!("Next couple of tokens: {:?}", codes),
-        Err(e) => eprintln!("Error: {}", e),
-    }
-    let image_decision =
-        gets("Would you like to create an image file of this QR code? (y/N)").unwrap();
-    if image_decision == "y" {
-        match make_qr_code_image(&otpauth_uri) {
-            Ok(file_path) => println!(
-                "QR image file generated at {}. Be sure to delete it securely when done.",
-                file_path
-            ),
-            Err(e) => eprintln!("Error generating QR code image file: {}", e),
-        }
-    } else {
-        println!("OK, I won't create a file. All done");
+        },
+        None => encode_qr_code(),
     }
 }

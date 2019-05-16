@@ -10,12 +10,43 @@ use image::Luma;
 use qrcode::QrCode;
 use std::error::Error;
 use std::io::{self, ErrorKind};
+use std::path::PathBuf;
 extern crate quirc;
 
 use quirc::QrCoder;
 use std::fs::File;
 use std::io::Read;
 use std::str;
+
+pub fn encode_qr_code() {
+    println!("Let's make a QR code");
+    let key: String = get_key();
+    // MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H
+    let service = gets("Enter name of service").unwrap();
+    let username = gets("Enter username").unwrap();
+
+    let otpauth_uri = make_otpauth_uri(&key, service, username);
+
+    display_qr_code(&otpauth_uri).expect("Couldn't display QR code");
+
+    match present_codes(&key) {
+        Ok(codes) => println!("Next couple of tokens: {:?}", codes),
+        Err(e) => eprintln!("Error: {}", e),
+    }
+    let image_decision =
+        gets("Would you like to create an image file of this QR code? (y/N)").unwrap();
+    if image_decision == "y" {
+        match make_qr_code_image(&otpauth_uri) {
+            Ok(file_path) => println!(
+                "QR image file generated at {}. Be sure to delete it securely when done.",
+                file_path
+            ),
+            Err(e) => eprintln!("Error generating QR code image file: {}", e),
+        }
+    } else {
+        println!("OK, I won't create a file. All done");
+    }
+}
 
 pub fn get_key() -> String {
     loop {
@@ -142,7 +173,7 @@ pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, qrcode::types::QrEr
     Ok(qr_code_file_path)
 }
 
-pub fn read_codes_from_file(file_path: &str) -> Result<Vec<String>, Box<Error>> {
+pub fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<Error>> {
     let mut file = File::open(file_path).expect("Unable to open file");
 
     let mut vec = Vec::new();
@@ -202,6 +233,7 @@ pub fn gets(prompt: &str) -> io::Result<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::path::Path;
     #[test]
     fn can_write_and_read_a_qr_code_image_file() {
         let key: String = "secretkeytest".to_string();
@@ -216,7 +248,8 @@ mod tests {
             Err(e) => panic!("Error generating QR code image file: {}", e),
         };
 
-        let first_code = &read_codes_from_file(qr_image_file_path).unwrap()[0];
+        let first_code =
+            &read_codes_from_file(&Path::new(qr_image_file_path).to_path_buf()).unwrap()[0];
         assert_eq!(first_code, &otpauth_uri);
     }
 }
