@@ -20,15 +20,17 @@ Honestly, I'm not sure. But I figure it's better than `qrencode -s 10 -o generat
 
 Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. If you can, I'd recommend using KeePassXC and not this script for managing your TOTP keys and QR codes.
 
-## Setup
+## Installation/Setup
 
-1. Install Rust
-2. Clone repo, `cd` into repo directory
+1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
+2. `cargo install --git https://github.com/sts10/qr-forge`
+
+Alternatively: Clone repo, `cd` into repo directory,  and run `cargo install --path=.`
 
 ## Usage
 
-- To **encode** a secret and create a QR code, run `cargo run`
-- To **decode** a secret from an existing QR code image, run `cargo run -- -d=<qr_code_image_file_path.png>`
+- To **encode** a secret and create a QR code, run `qrforge -e`
+- To **decode** a secret from an existing QR code image, run `qrforge -d=<qr_code_image_file_path.png>`
 
 ![Demo](demo/demo.png)
 
