@@ -37,10 +37,12 @@ Alternatively: Clone repo, `cd` into repo directory,  and run `cargo install --p
 
 ## Notes
 
+Here are [the official-ish specs of the otpauth URI from Google](https://github.com/google/google-authenticator/wiki/Key-Uri-Format).
+
 Before I wrote this code, I wrote [a blog post](https://sts10.github.io/2018/11/26/totp-uris-qr-codes-2-factor.html) that might help you understand the problems I'm interested in here. 
 
 ## To Do 
 
 - [x] Add ability to generate a few 6-digit codes, allowing users to confirm everything went right. See [this function](https://github.com/Skarlso/totp/blob/master/src/generator.rs#L9) for clues on how to do this.
+- [x] Make this a real CLI using structopt or Clap
 - [ ] Big refactor of the reading image code
-- [ ] Make this a real CLI using structopt or Clap

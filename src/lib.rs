@@ -109,7 +109,7 @@ fn test_key(key: &str) -> Result<(), Box<Error>> {
         Ok(_bytes) => Ok(()),
         Err(_) => Err(io::Error::new(
             ErrorKind::InvalidInput,
-            "key is not a valid base32 data type",
+            "key is not a valid BASE32 data type",
         )
         .into()),
     }
