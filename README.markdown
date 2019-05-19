@@ -29,6 +29,22 @@ Alternatively: Clone repo, `cd` into repo directory,  and run `cargo install --p
 
 ## Usage
 
+```text
+USAGE:
+    qrforge [FLAGS] [OPTIONS]
+
+FLAGS:
+    -e, --encode     Encode QR code from text secret, service and username
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -d, --decode <qr_image_file>    Decode a QR code image file to an OTPauth URI
+
+```
+
+Basically...
+
 - To **encode** a secret and create a QR code, run `qrforge -e`
 - To **decode** a secret from an existing QR code image, run `qrforge -d=<qr_code_image_file_path.png>`
 
