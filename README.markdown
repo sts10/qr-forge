@@ -1,6 +1,6 @@
 # QR Forge
 
-A Rust script to more safely generate a QR code from a 32-character TOTP secret key. Can also read QR codes from image files. This is an updated version of my [QR Encoder](https://github.com/sts10/qrencoder).
+A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key. Can also read QR codes from image files. This is an updated version of my [QR Encoder](https://github.com/sts10/qrencoder).
 
 ## The problem this tries to solve
 
