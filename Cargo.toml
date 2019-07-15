@@ -1,7 +1,7 @@
 [package]
 name = "qrforge"
 version = "0.1.4"
-authors = ["Sam Schlinkert <sschlinkert@gmail.com"]
+authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2018"
 
 [dependencies]
