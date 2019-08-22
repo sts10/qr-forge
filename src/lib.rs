@@ -93,7 +93,7 @@ pub fn display_qr_code(otpauth_uri: &str) -> Result<(), qrcode::types::QrError> 
     Ok(())
 }
 
-pub fn present_codes(key: &str) -> Result<Vec<String>, Box<Error>> {
+pub fn present_codes(key: &str) -> Result<Vec<String>, Box<dyn Error>> {
     let mut tokens: Vec<String> = vec![];
     for token_number in 0..7 {
         match generate_otp_token(key, token_number * 30) {
@@ -103,7 +103,7 @@ pub fn present_codes(key: &str) -> Result<Vec<String>, Box<Error>> {
     }
     Ok(tokens)
 }
-fn test_key(key: &str) -> Result<(), Box<Error>> {
+fn test_key(key: &str) -> Result<(), Box<dyn Error>> {
     let secret_bytes = BASE32.decode(key.as_bytes());
     match secret_bytes {
         Ok(_bytes) => Ok(()),
@@ -115,7 +115,7 @@ fn test_key(key: &str) -> Result<(), Box<Error>> {
     }
 }
 
-fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<Error>> {
+fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn Error>> {
     let now = Local::now().timestamp();
     let timer = ((now + future_seconds) / 30) as u64;
     let secret_bytes = BASE32.decode(key.as_bytes());
@@ -173,7 +173,7 @@ pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, qrcode::types::QrEr
     Ok(qr_code_file_path)
 }
 
-pub fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<Error>> {
+pub fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
     let mut file = File::open(file_path).expect("Unable to open file");
 
     let mut vec = Vec::new();
@@ -184,9 +184,11 @@ pub fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<Erro
     let mut quirc = match QrCoder::new() {
         Ok(code) => code,
         Err(_) => {
-            return Err(
-                io::Error::new(ErrorKind::InvalidInput, "Error reading QR code image file").into(),
-            );
+            return Err(io::Error::new(
+                ErrorKind::InvalidInput,
+                "Error reading QR code image file",
+            )
+            .into());
         }
     };
 
@@ -195,9 +197,11 @@ pub fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<Erro
     let codes = match quirc.codes(&image, width, height) {
         Ok(codes) => codes,
         Err(_) => {
-            return Err(
-                io::Error::new(ErrorKind::InvalidInput, "Error reading QR code image file").into(),
-            );
+            return Err(io::Error::new(
+                ErrorKind::InvalidInput,
+                "Error reading QR code image file",
+            )
+            .into());
         }
     };
     let mut codes_as_strings: Vec<String> = vec![];
