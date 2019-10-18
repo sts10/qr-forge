@@ -82,7 +82,7 @@ pub fn display_qr_code(otpauth_uri: &str) -> Result<(), qrcode::types::QrError> 
     let code = match QrCode::new(otpauth_uri) {
         Ok(code) => code,
         Err(e) => return Err(e),
-    }; // .unwrap();
+    };
 
     let string = code
         .render::<char>()

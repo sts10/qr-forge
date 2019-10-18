@@ -7,7 +7,7 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 #[structopt(name = "qrforge")]
 struct Opt {
-    /// Encode QR code from text secret, service and username
+    /// Encode a QR code from text secret, service, and username
     #[structopt(short = "e", long = "encode")]
     encode: bool,
 
