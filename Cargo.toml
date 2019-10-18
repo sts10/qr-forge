@@ -6,11 +6,11 @@ edition = "2018"
 
 [dependencies]
 rpassword = "3.0.2"
-qrcode = "0.10.0"
+qrcode = "0.11.0"
+image = "0.22"
 chrono = "0.4"
 data-encoding = "2.1.1"
 rust-crypto = "^0.2"
 byteorder = "1"
-image = "*"
 quirc = "0.0.1"
 structopt = "0.2"
