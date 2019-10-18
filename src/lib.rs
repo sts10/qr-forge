@@ -79,10 +79,7 @@ pub fn make_otpauth_uri(key: &str, service: String, username: String) -> String 
 }
 
 pub fn display_qr_code(otpauth_uri: &str) -> Result<(), qrcode::types::QrError> {
-    let code = match QrCode::new(otpauth_uri) {
-        Ok(code) => code,
-        Err(e) => return Err(e),
-    };
+    let code = QrCode::new(otpauth_uri)?;
 
     let string = code
         .render::<char>()
@@ -160,11 +157,7 @@ fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn 
 }
 
 pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, qrcode::types::QrError> {
-    let code = match QrCode::new(otpauth_uri) {
-        Ok(code) => code,
-        Err(e) => return Err(e),
-    };
-    // let code = QrCode::new(otpauth_uri).unwrap();
+    let code = QrCode::new(otpauth_uri)?;
     // Render the bits into an image.
     let image = code.render::<Luma<u8>>().build();
     // Save the image.
