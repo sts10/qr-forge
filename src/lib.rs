@@ -156,21 +156,37 @@ fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn 
     Ok(format!("{:0length$}", modulo, length = 6))
 }
 
-pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, qrcode::types::QrError> {
+// pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, qrcode::types::QrError> {
+pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, Box<dyn Error>> {
     let code = QrCode::new(otpauth_uri)?;
     // Render the bits into an image.
     let image = code.render::<Luma<u8>>().build();
     // Save the image.
     let qr_code_file_path = "qr-code.png";
-    image.save(qr_code_file_path).unwrap();
+    match image.save(qr_code_file_path) {
+        Ok(_) => (),
+        Err(_) => {
+            return Err(
+                io::Error::new(ErrorKind::InvalidInput, "Error saving QR code image file").into(),
+            );
+        }
+    }
     Ok(qr_code_file_path)
 }
 
 pub fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
-    let mut file = File::open(file_path).expect("Unable to open file");
-
+    let mut file = File::open(file_path)?;
     let mut vec = Vec::new();
-    file.read_to_end(&mut vec).unwrap();
+    match file.read_to_end(&mut vec) {
+        Ok(_) => (),
+        Err(_) => {
+            return Err(io::Error::new(
+                ErrorKind::InvalidInput,
+                "Error reading QR code image file",
+            )
+            .into());
+        }
+    }
 
     let image = image::load_from_memory(&vec).unwrap().to_luma();
 
