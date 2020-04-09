@@ -1,20 +1,18 @@
 # QR Forge
 
-A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key. Can also read QR codes from image files. This is an updated version of my [QR Encoder](https://github.com/sts10/qrencoder).
+A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key. Can also read QR codes from image files and present the TOTP secret key.
 
-## The problem this tries to solve
+## The problem this tool tries to solve
 
-You've got a TOTP secret key (say for 2-factor authentication). Rather than have to manually enter all 32 characters into a mobile app like Google Authenticator, we'd like to generate a QR code of this secret key. 
+Problem 1: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) as a string?
 
-The problem with using an existing CLI like `qrencode` is that your secret key will be stored in your bash_history and elsewhere. Plus, it generates an image file, which you'll have to delete securely.
+QR Forge accepts an image file of the QR code and displays the discovered 32-character TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge -d=<qr_code_image_file_path.png>` (`d` for "decoding" the image).
 
-## What is does to try to solve this problem
-
-This Rust script attempts to solve that by using [rpassword](https://github.com/conradkdotcom/rpassword) to take in the secret key, then using [qrcode-rust](https://github.com/kennytm/qrcode-rust) to display the generated QR code right in the terminal, rather than create an image file. This displayed QR code is high-quality enough for my iPhone to pick up accurately, and there's no generated image file to worry about.
+Problem 2 (the reverse): You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can enter the secret into your phone's authentication app. To do this, run `qrforge -e`. You'll then be prompted to enter the secret and other information about the service. Following the prompts, a QR code will be displayed in your terminal, additionally you'll be given the choice to save the QR code to an image file.
 
 ### But is it actually secure? 
 
-Honestly, I'm not sure. But I figure it's better than `qrencode -s 10 -o generated_twitter_qr_code.png 'otpauth://totp/Twitter:@sts10?secret=hereismysecret&issuer=Twitter'`
+Honestly, I'm not sure. But since this tool uses [rpassword](https://github.com/conradkdotcom/rpassword) to take in the secret key, I figure it's better than `qrencode -s 10 -o generated_twitter_qr_code.png 'otpauth://totp/Twitter:@sts10?secret=hereismysecret&issuer=Twitter'`, which will store your secret in your BASH history and potentially elsewhere.
 
 ### Other solutions
 
@@ -45,8 +43,8 @@ OPTIONS:
 
 Basically...
 
-- To **encode** a secret and create a QR code, run `qrforge -e`. You'll then be prompted for information.
 - To **decode** a secret from an existing QR code image, run `qrforge -d=<qr_code_image_file_path.png>`
+- To **encode** a secret and create a QR code, run `qrforge -e`. You'll then be prompted for information.
 
 ![Demo](demo/demo.png)
 
