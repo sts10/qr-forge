@@ -1,4 +1,4 @@
-# QR Forge
+# QRForge
 
 A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key. Can also read QR codes from image files and present the TOTP secret key.
 
