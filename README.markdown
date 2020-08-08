@@ -4,7 +4,7 @@ A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key
 
 ## The problem this tool tries to solve
 
-**QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else?
+**QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust?
 
 QR Forge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge -d <qr_code_image_file_path.png>` (`d` for "decoding" the image).
 
