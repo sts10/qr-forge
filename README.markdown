@@ -6,15 +6,15 @@ A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key
 
 **QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust?
 
-QR Forge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge -d <qr_code_image_file_path.png>` (`d` for "decoding" the image).
+QRForge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge -d <qr_code_image_file_path.png>` (`d` for "decoding" the image).
 
-**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can get it into your phone's authentication app. You can do this with QR Forge by running `qrforge -e`. You'll then be prompted to enter the secret and other information about the service. 
+**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge -e`. You'll then be prompted to enter the secret and other information about the service. 
 
 After you get through some prompts, a QR code will be displayed in your terminal, additionally you'll be given the choice to save the QR code to an image file.
 
 ### But is it actually secure? 
 
-Honestly, I'm not sure. But since QR Forge uses [rpassword](https://github.com/conradkdotcom/rpassword) to take in the secret key, I figure it's better than `qrencode -s 10 -o generated_twitter_qr_code.png 'otpauth://totp/Twitter:@sts10?secret=hereismysecret&issuer=Twitter'`, which will store your secret in your BASH history and potentially elsewhere.
+Honestly, I'm not sure. But since QRForge uses [rpassword](https://github.com/conradkdotcom/rpassword) to take in the secret key, I figure it's better than `qrencode -s 10 -o generated_twitter_qr_code.png 'otpauth://totp/Twitter:@sts10?secret=hereismysecret&issuer=Twitter'`, which will store your secret in your BASH history and potentially elsewhere.
 
 ### Other solutions
 
