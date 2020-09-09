@@ -1,6 +1,6 @@
 [package]
 name = "qrforge"
-version = "0.1.6"
+version = "0.1.70"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2018"
 
@@ -13,4 +13,4 @@ data-encoding = "2.1.1"
 rust-crypto = "^0.2"
 byteorder = "1"
 quirc = "0.0.1"
-structopt = "0.2"
+structopt = "0.3"

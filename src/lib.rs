@@ -1,6 +1,8 @@
 extern crate image;
 extern crate qrcode;
+extern crate quirc;
 extern crate rpassword;
+
 use byteorder::{BigEndian, ByteOrder};
 use chrono::Local;
 use crypto::mac::Mac;
@@ -8,14 +10,12 @@ use crypto::{hmac::Hmac, sha1::Sha1};
 use data_encoding::BASE32;
 use image::Luma;
 use qrcode::QrCode;
-use std::error::Error;
-use std::io::{self, ErrorKind};
-use std::path::PathBuf;
-extern crate quirc;
-
 use quirc::QrCoder;
+use std::error::Error;
 use std::fs::File;
 use std::io::Read;
+use std::io::{self, ErrorKind};
+use std::path::PathBuf;
 use std::str;
 
 pub fn encode_qr_code() {
@@ -29,7 +29,7 @@ pub fn encode_qr_code() {
 
     display_qr_code(&otpauth_uri).expect("Couldn't display QR code");
 
-    match present_codes(&key) {
+    match present_series_of_tokens(&key) {
         Ok(codes) => println!("Next couple of tokens: {:?}", codes),
         Err(e) => eprintln!("Error: {}", e),
     }
@@ -48,7 +48,19 @@ pub fn encode_qr_code() {
     }
 }
 
-pub fn get_key() -> String {
+pub fn decode_qr_code(qr_image_file: PathBuf) {
+    match read_codes_from_file(&qr_image_file) {
+        Ok(codes) => {
+            println!("Discovered {} code(s):", codes.len());
+            for code in codes {
+                println!("{}", code);
+            }
+        }
+        Err(e) => eprintln!("Error: {}", e),
+    }
+}
+
+fn get_key() -> String {
     loop {
         // get key from user safely, then make it uppercase and remove spaces
         let key: String = rpassword::read_password_from_tty(Some("Enter the secret key:\n"))
@@ -58,7 +70,7 @@ pub fn get_key() -> String {
             .filter(|&c| c != ' ')
             .collect();
         // test key for validity. If invalid, start loop again
-        match test_key(&key) {
+        match validate_key(&key) {
             Ok(()) => return key,
             Err(e) => {
                 eprintln!(
@@ -71,14 +83,14 @@ pub fn get_key() -> String {
     }
 }
 
-pub fn make_otpauth_uri(key: &str, service: String, username: String) -> String {
+fn make_otpauth_uri(key: &str, service: String, username: String) -> String {
     format!(
         "otpauth://totp/{}:@{}?secret={}&issuer={}",
         service, username, key, service
     )
 }
 
-pub fn display_qr_code(otpauth_uri: &str) -> Result<(), qrcode::types::QrError> {
+fn display_qr_code(otpauth_uri: &str) -> Result<(), qrcode::types::QrError> {
     let code = QrCode::new(otpauth_uri)?;
 
     let string = code
@@ -90,7 +102,7 @@ pub fn display_qr_code(otpauth_uri: &str) -> Result<(), qrcode::types::QrError> 
     Ok(())
 }
 
-pub fn present_codes(key: &str) -> Result<Vec<String>, Box<dyn Error>> {
+fn present_series_of_tokens(key: &str) -> Result<Vec<String>, Box<dyn Error>> {
     let mut tokens: Vec<String> = vec![];
     for token_number in 0..7 {
         match generate_otp_token(key, token_number * 30) {
@@ -100,18 +112,20 @@ pub fn present_codes(key: &str) -> Result<Vec<String>, Box<dyn Error>> {
     }
     Ok(tokens)
 }
-fn test_key(key: &str) -> Result<(), Box<dyn Error>> {
+
+fn validate_key(key: &str) -> Result<(), Box<dyn Error>> {
     let secret_bytes = BASE32.decode(key.as_bytes());
     match secret_bytes {
         Ok(_bytes) => Ok(()),
         Err(_) => Err(io::Error::new(
             ErrorKind::InvalidInput,
-            "key is not a valid BASE32 data type",
+            "Key is not a valid BASE32 data type",
         )
         .into()),
     }
 }
 
+// I definitely copy and pasted this from somewhere else
 fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn Error>> {
     let now = Local::now().timestamp();
     let timer = ((now + future_seconds) / 30) as u64;
@@ -156,8 +170,7 @@ fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn 
     Ok(format!("{:0length$}", modulo, length = 6))
 }
 
-// pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, qrcode::types::QrError> {
-pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, Box<dyn Error>> {
+fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, Box<dyn Error>> {
     let code = QrCode::new(otpauth_uri)?;
     // Render the bits into an image.
     let image = code.render::<Luma<u8>>().build();
@@ -165,16 +178,14 @@ pub fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, Box<dyn Error>> {
     let qr_code_file_path = "qr-code.png";
     match image.save(qr_code_file_path) {
         Ok(_) => (),
-        Err(_) => {
-            return Err(
-                io::Error::new(ErrorKind::InvalidInput, "Error saving QR code image file").into(),
-            );
+        Err(e) => {
+            return Err(Box::new(e));
         }
     }
     Ok(qr_code_file_path)
 }
 
-pub fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
+fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
     let mut file = File::open(file_path)?;
     let mut vec = Vec::new();
     match file.read_to_end(&mut vec) {
@@ -234,7 +245,7 @@ fn qrcode_to_string(code: quirc::QrCode) -> String {
     String::from(str::from_utf8(&code.payload).expect("Error reading QR image payload"))
 }
 
-pub fn gets(prompt: &str) -> io::Result<String> {
+fn gets(prompt: &str) -> io::Result<String> {
     println!("{}", prompt);
     let mut input = String::new();
     match io::stdin().read_line(&mut input) {
@@ -249,7 +260,7 @@ mod tests {
     use std::path::Path;
     #[test]
     fn can_write_and_read_a_qr_code_image_file() {
-        let key: String = "secretkeytest".to_string();
+        let key: String = "MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H".to_string();
         let service = "MySocialNetwork".to_string();
         let username = "test_user".to_string();
 
@@ -261,8 +272,17 @@ mod tests {
             Err(e) => panic!("Error generating QR code image file: {}", e),
         };
 
-        let first_code =
+        let first_uri =
             &read_codes_from_file(&Path::new(qr_image_file_path).to_path_buf()).unwrap()[0];
-        assert_eq!(first_code, &otpauth_uri);
+        assert_eq!(first_uri, &otpauth_uri);
+    }
+
+    #[test]
+    fn can_validate_inputted_keys() {
+        let good_key = "MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H";
+        let bad_key = "a_bad_key";
+
+        assert!(validate_key(good_key).is_ok());
+        assert!(validate_key(bad_key).is_err());
     }
 }

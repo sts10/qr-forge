@@ -6,9 +6,9 @@ A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key
 
 **QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust?
 
-QRForge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge -d <qr_code_image_file_path.png>` (`d` for "decoding" the image).
+QRForge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge decode <qr_code_image_file_path.png>` (`d` for "decoding" the image).
 
-**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge -e`. You'll then be prompted to enter the secret and other information about the service. 
+**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge encode`. You'll then be prompted to enter the secret and other information about the service. 
 
 After you get through some prompts, a QR code will be displayed in your terminal, additionally you'll be given the choice to save the QR code to an image file.
 
@@ -18,7 +18,7 @@ Honestly, I'm not sure. But since QRForge uses [rpassword](https://github.com/co
 
 ### Other solutions
 
-Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. If you can, I'd recommend using KeePassXC and not this script for managing your TOTP keys and QR codes.
+Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. If you can, I'd recommend using KeePassXC rather than this tool for managing your TOTP keys and QR codes.
 
 ## Installation/Setup
 
@@ -31,25 +31,28 @@ Alternatively: Clone repo, `cd` into repo directory, and run `cargo install --pa
 
 ```text
 USAGE:
-    qrforge [FLAGS] [OPTIONS]
+    qrforge <SUBCOMMAND>
 
 FLAGS:
-    -e, --encode     Encode QR code from text secret, service and username
     -h, --help       Prints help information
     -V, --version    Prints version information
 
-OPTIONS:
-    -d, --decode <qr_image_file>    Decode a QR code image file to an OTPauth URI
-
+SUBCOMMANDS:
+    decode    Decode a QR code image file to an OTPauth URI
+    encode    Encode a QR code from text secret, service, and username
+    help      Prints this message or the help of the given subcommand(s)
 ```
 
 Basically...
 
-- To **decode** a secret from an existing QR code image, run `qrforge -d=<qr_code_image_file_path.png>`
-- To **encode** a secret and create a QR code, run `qrforge -e`. You'll then be prompted for information.
+- To **decode** a secret from an existing QR code image, run `qrforge decode <qr_code_image_file_path.png>`
+- To **encode** a secret and create a QR code, run `qrforge encode`. You'll then be prompted for information.
 
-![Demo](demo/demo.png)
+![Demo of qrforge encoding a TOTP secret and displaying results QR code](demo/demo.png)
 
+## Limitations
+
+This program's setting for TOTPs are hard-coded to some sensible default (30 seconds, etc.).  
 
 ## Notes / reference
 
@@ -62,3 +65,4 @@ Before I wrote this code, I wrote [a blog post](https://sts10.github.io/2018/11/
 - [x] Add ability to generate a few 6-digit codes, allowing users to confirm everything went right. See [this function](https://github.com/Skarlso/totp/blob/master/src/generator.rs#L9) for clues on how to do this.
 - [x] Make this a real CLI using structopt or Clap
 - [ ] Big refactor of the reading image code
+- [ ] Provide ability to handle non-standard TOTP codes.
