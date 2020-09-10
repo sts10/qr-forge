@@ -52,7 +52,7 @@ read    Read a QR code image file to an OTPauth URI
 
 ## Limitations
 
-This program's setting reading and creating TOTPs is hard-coded to some sensible default (30 seconds, etc.). I also need to test it on image file types other than PNG.
+This program's setting reading and creating TOTPs is hard-coded to some sensible default (30 seconds, one type of secret key, etc.). I also need to test it on image file types other than PNG.
 
 ## Notes / reference
 
