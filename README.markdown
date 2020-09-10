@@ -6,15 +6,15 @@ A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key
 
 **QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust?
 
-QRForge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge decode <qr_code_image_file_path.png>` (`d` for "decoding" the image).
+QRForge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge decode <qr_code_image_file_path.png>` 
 
-**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge encode`. You'll then be prompted to enter the secret and other information about the service. 
+**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge encode`. You'll then be prompted to enter the secret and other information about the account. 
 
-After you get through some prompts, a QR code will be displayed in your terminal, additionally you'll be given the choice to save the QR code to an image file.
+After you get through some prompts, a QR code will be displayed in your terminal. You'll also be given the choice to save the QR code to an image file.
 
 ### But is it actually secure? 
 
-Honestly, I'm not sure. But since QRForge uses [rpassword](https://github.com/conradkdotcom/rpassword) to take in the secret key, I figure it's better than `qrencode -s 10 -o generated_twitter_qr_code.png 'otpauth://totp/Twitter:@sts10?secret=hereismysecret&issuer=Twitter'`, which will store your secret in your BASH history and potentially elsewhere.
+Honestly, I'm not sure. But since QRForge uses [rpassword](https://github.com/conradkdotcom/rpassword) to take in the secret key, I figure it's better than using a generic tool for creating QR codes, like qrencode, which may store your secret key in your shell's history and potentially elsewhere.
 
 ### Other solutions
 
@@ -46,17 +46,17 @@ SUBCOMMANDS:
 Basically...
 
 - To **decode** a secret from an existing QR code image, run `qrforge decode <qr_code_image_file_path.png>`
-- To **encode** a secret and create a QR code, run `qrforge encode`. You'll then be prompted for information.
+- To **encode** a secret and create a QR code, run `qrforge encode`. You'll then be prompted for specifics.
 
 ![Demo of qrforge encoding a TOTP secret and displaying results QR code](demo/demo.png)
 
 ## Limitations
 
-This program's setting for TOTPs are hard-coded to some sensible default (30 seconds, etc.).  
+This program's setting reading and creating TOTPs is hard-coded to some sensible default (30 seconds, etc.).  
 
 ## Notes / reference
 
-Here are [the official-ish specs of the otpauth URI from Google](https://github.com/google/google-authenticator/wiki/Key-Uri-Format).
+Here are [the official specifications of the otpauth URI format from Google](https://github.com/google/google-authenticator/wiki/Key-Uri-Format), if helpful.
 
 Before I wrote this code, I wrote [a blog post](https://sts10.github.io/2018/11/26/totp-uris-qr-codes-2-factor.html) that might help you understand the problems I'm interested in here. 
 
