@@ -7,13 +7,13 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 #[structopt(name = "qrforge")]
 enum Opt {
-    /// Encode a QR code from text secret, service, and username
-    #[structopt(alias = "encode")]
-    Encode,
+    /// Draw a QR code from text secret, service, and username
+    #[structopt(alias = "draw")]
+    Draw,
 
-    /// Decode a QR code image file to an OTPauth URI
-    #[structopt(alias = "decode")]
-    Decode {
+    /// Read a QR code image file to an OTPauth URI
+    #[structopt(alias = "read")]
+    Read {
         #[structopt(name = "QR image", parse(from_os_str))]
         qr_image_file: PathBuf,
     },
@@ -21,7 +21,7 @@ enum Opt {
 
 fn main() {
     match Opt::from_args() {
-        Opt::Encode => encode_qr_code(),
-        Opt::Decode { qr_image_file } => decode_qr_code(qr_image_file),
+        Opt::Draw => draw_qr_code(),
+        Opt::Read { qr_image_file } => read_qr_code(qr_image_file),
     }
 }

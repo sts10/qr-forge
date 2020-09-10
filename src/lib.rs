@@ -18,7 +18,7 @@ use std::io::{self, ErrorKind};
 use std::path::PathBuf;
 use std::str;
 
-pub fn encode_qr_code() {
+pub fn draw_qr_code() {
     println!("Let's make a QR code");
     let key: String = get_key();
     // MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H
@@ -48,7 +48,7 @@ pub fn encode_qr_code() {
     }
 }
 
-pub fn decode_qr_code(qr_image_file: PathBuf) {
+pub fn read_qr_code(qr_image_file: PathBuf) {
     match read_codes_from_file(&qr_image_file) {
         Ok(codes) => {
             println!("Discovered {} code(s):", codes.len());

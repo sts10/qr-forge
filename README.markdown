@@ -6,9 +6,9 @@ A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key
 
 **QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust?
 
-QRForge accepts an image file of the QR code and displays the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge decode <qr_code_image_file_path.png>` 
+QRForge accepts an image file of the QR code and displays or "reads" the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge read <qr_code_image_file_path.png>` 
 
-**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge encode`. You'll then be prompted to enter the secret and other information about the account. 
+**TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate, or "draw", a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge draw`. You'll then be prompted to enter the secret and other information about the account. 
 
 After you get through some prompts, a QR code will be displayed in your terminal. You'll also be given the choice to save the QR code to an image file.
 
@@ -31,22 +31,22 @@ Alternatively: Clone repo, `cd` into repo directory, and run `cargo install --pa
 
 ```text
 USAGE:
-    qrforge <SUBCOMMAND>
+qrforge <SUBCOMMAND>
 
 FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
+-h, --help       Prints help information
+-V, --version    Prints version information
 
-SUBCOMMANDS:
-    decode    Decode a QR code image file to an OTPauth URI
-    encode    Encode a QR code from text secret, service, and username
-    help      Prints this message or the help of the given subcommand(s)
+SUBCOMMANDS:                                                                                                                                                                                                                                                                                           
+draw    Draw a QR code from text secret, service, and username                                                                                                                                                                                                                                     
+help    Prints this message or the help of the given subcommand(s)                                                                                                                                                                                                                                 
+read    Read a QR code image file to an OTPauth URI  
 ```
 
 Basically...
 
-- To **decode** a secret from an existing QR code image, run `qrforge decode <qr_code_image_file_path.png>`
-- To **encode** a secret and create a QR code, run `qrforge encode`. You'll then be prompted for specifics.
+- To **read** a secret from an existing QR code image, run `qrforge read <qr_code_image_file_path.png>`
+- To **draw** a QR code from a secret, run `qrforge draw`. You'll then be prompted for specifics.
 
 ![Demo of qrforge encoding a TOTP secret and displaying results QR code](demo/demo.png)
 
