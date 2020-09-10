@@ -37,22 +37,22 @@ FLAGS:
 -h, --help       Prints help information
 -V, --version    Prints version information
 
-SUBCOMMANDS:                                                                                                                                                                                                                                                                                           
-draw    Draw a QR code from text secret, service, and username                                                                                                                                                                                                                                     
-help    Prints this message or the help of the given subcommand(s)                                                                                                                                                                                                                                 
-read    Read a QR code image file to an OTPauth URI  
+SUBCOMMANDS:
+draw    Draw a QR code from text secret, service, and username
+help    Prints this message or the help of the given subcommand(s) 
+read    Read a QR code image file to an OTPauth URI
 ```
 
-Basically...
+## Examples
 
-- To **read** a secret from an existing QR code image, run `qrforge read <qr_code_image_file_path.png>`
-- To **draw** a QR code from a secret, run `qrforge draw`. You'll then be prompted for specifics.
+- `qrforge read path/to/qr_code.png` _reads_ a TOTP secret from an image of a QR code.
+- `qrforge draw` prompts the user to _draw_ or create a QR code from a TOTP secret and other information.
 
-![Demo of qrforge encoding a TOTP secret and displaying results QR code](demo/demo.png)
+![Demo of qrforge drawing a QR code from a TOTP secret and other account information, and displaying the resulting QR code](demo/demo.png)
 
 ## Limitations
 
-This program's setting reading and creating TOTPs is hard-coded to some sensible default (30 seconds, etc.).  
+This program's setting reading and creating TOTPs is hard-coded to some sensible default (30 seconds, etc.). I also need to test it on image file types other than PNG.
 
 ## Notes / reference
 
