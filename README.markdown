@@ -43,10 +43,25 @@ help    Prints this message or the help of the given subcommand(s)
 read    Read a QR code image file to an OTPauth URI
 ```
 
+The `draw` subcommand has its own options, including `output`:
+
+```text
+USAGE:
+    qrforge draw [OPTIONS]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -o, --output <output>    Print created QR code to a file
+```
+
 ## Examples
 
 - `qrforge read path/to/qr_code.png` _reads_ a TOTP secret from an image of a QR code.
 - `qrforge draw` prompts the user to _draw_ or create a QR code from a TOTP secret and other information.
+- `qrforge draw -o /path/to/new-created-qr-code.png` prompts user to create QR code and saves the resulting QR code to specified file.
 
 ![Demo of qrforge drawing a QR code from a TOTP secret and other account information, and displaying the resulting QR code](demo/demo.png)
 

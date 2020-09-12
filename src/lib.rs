@@ -18,12 +18,12 @@ use std::io::{self, ErrorKind};
 use std::path::PathBuf;
 use std::str;
 
-pub fn draw_qr_code() {
+pub fn draw_qr_code(output_file_path: Option<String>) {
     println!("Let's make a QR code");
     let key: String = get_key();
     // MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H
-    let service = gets("Enter name of service").unwrap();
-    let username = gets("Enter username").unwrap();
+    let service = gets("Enter name of service:").unwrap();
+    let username = gets("Enter username:").unwrap();
 
     let otpauth_uri = make_otpauth_uri(&key, service, username);
 
@@ -33,18 +33,14 @@ pub fn draw_qr_code() {
         Ok(codes) => println!("Next couple of tokens: {:?}", codes),
         Err(e) => eprintln!("Error: {}", e),
     }
-    let image_decision =
-        gets("Would you like to create an image file of this QR code? (y/N)").unwrap();
-    if image_decision == "y" {
-        match make_qr_code_image(&otpauth_uri) {
-            Ok(file_path) => println!(
-                "QR image file generated at {}. Be sure to delete it securely when done.",
-                file_path
-            ),
+    match output_file_path {
+        Some(output_file_path) => match make_qr_code_image(&otpauth_uri, &output_file_path) {
+            Ok(()) => println!("QR code image file created at {}.", &output_file_path),
             Err(e) => eprintln!("Error generating QR code image file: {}", e),
+        },
+        None => {
+            println!("OK, I won't create a file. All done");
         }
-    } else {
-        println!("OK, I won't create a file. All done");
     }
 }
 
@@ -170,19 +166,19 @@ fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn 
     Ok(format!("{:0length$}", modulo, length = 6))
 }
 
-fn make_qr_code_image(otpauth_uri: &str) -> Result<&str, Box<dyn Error>> {
+fn make_qr_code_image(otpauth_uri: &str, output_file_path: &str) -> Result<(), Box<dyn Error>> {
     let code = QrCode::new(otpauth_uri)?;
     // Render the bits into an image.
     let image = code.render::<Luma<u8>>().build();
     // Save the image.
-    let qr_code_file_path = "qr-code.png";
-    match image.save(qr_code_file_path) {
+    // let qr_code_file_path = "qr-code.png";
+    match image.save(output_file_path) {
         Ok(_) => (),
         Err(e) => {
             return Err(Box::new(e));
         }
     }
-    Ok(qr_code_file_path)
+    Ok(())
 }
 
 fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
@@ -265,15 +261,14 @@ mod tests {
         let username = "test_user".to_string();
 
         let otpauth_uri = make_otpauth_uri(&key, service, username);
+        let qr_code_file = "test_qr_code.png";
 
-        let qr_image_file_path = match make_qr_code_image(&otpauth_uri) {
+        match make_qr_code_image(&otpauth_uri, qr_code_file) {
             Ok(file_path) => file_path,
-
             Err(e) => panic!("Error generating QR code image file: {}", e),
         };
 
-        let first_uri =
-            &read_codes_from_file(&Path::new(qr_image_file_path).to_path_buf()).unwrap()[0];
+        let first_uri = &read_codes_from_file(&Path::new(qr_code_file).to_path_buf()).unwrap()[0];
         assert_eq!(first_uri, &otpauth_uri);
     }
 
