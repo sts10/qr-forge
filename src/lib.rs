@@ -38,9 +38,7 @@ pub fn draw_qr_code(output_file_path: Option<String>) {
             Ok(()) => println!("QR code image file created at {}.", &output_file_path),
             Err(e) => eprintln!("Error generating QR code image file: {}", e),
         },
-        None => {
-            println!("OK, I won't create a file. All done");
-        }
+        None => {}
     }
 }
 
