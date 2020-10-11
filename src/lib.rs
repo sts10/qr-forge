@@ -30,15 +30,22 @@ pub fn draw_qr_code(output_file_path: Option<String>) {
     display_qr_code(&otpauth_uri).expect("Couldn't display QR code");
 
     match present_series_of_tokens(&key) {
-        Ok(codes) => println!("Next couple of tokens: {:?}", codes),
-        Err(e) => eprintln!("Error: {}", e),
+        Ok(codes) => println!(
+            "Let's make sure we got it right. The next couple of tokens should be: {:?}",
+            codes
+        ),
+        Err(e) => eprintln!("Error generating next few codes: {}", e),
     }
-    match output_file_path {
-        Some(output_file_path) => match make_qr_code_image(&otpauth_uri, &output_file_path) {
-            Ok(()) => println!("QR code image file created at {}.", &output_file_path),
+
+    // If user wants to save the generated QR code to a file...
+    if let Some(output_path) = output_file_path {
+        match make_qr_code_image(&otpauth_uri, &output_path) {
+            Ok(()) => println!(
+                "QR code image file successfully created at {}",
+                &output_path
+            ),
             Err(e) => eprintln!("Error generating QR code image file: {}", e),
-        },
-        None => {}
+        }
     }
 }
 
