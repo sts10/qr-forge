@@ -75,9 +75,14 @@ Here are [the official specifications of the otpauth URI format from Google](htt
 
 Before I wrote this code, I wrote [a blog post](https://sts10.github.io/2018/11/26/totp-uris-qr-codes-2-factor.html) that might help you understand the problems I'm interested in here. 
 
+## A function from dependency that may be deprecated soon
+
+I recently noticed a warning from [the image crate](https://crates.io/crates/image) that they may be replacing the `to_luma` function that QRForge uses in favor of `to_luma8` or something similar (see [this code block](https://github.com/image-rs/image/blob/c1104c68d8a0a529056c6d0c076d8404f500e10c/src/dynimage.rs#L271-L284). However when I attempted to replace `to_luma` with `to_luma8` in the QRForge `src/lib.rs` file, I got a compile error, so I'm not sure what's going on. Maybe I'm using a slightly older version of the image crate locally? Hopefully this is a simple change some time down the road. PRs welcome if you have insight or avoided the warning and got tests to pass.
+
 ## To do 
 
 - [x] Add ability to generate a few 6-digit codes, allowing users to confirm everything went right. See [this function](https://github.com/Skarlso/totp/blob/master/src/generator.rs#L9) for clues on how to do this.
 - [x] Make this a real CLI using structopt or Clap
+- [ ] Handle deprecation issue detailed above.
 - [ ] Big refactor of the reading image code
-- [ ] Provide ability to handle non-standard TOTP codes.
+- [ ] Provide ability to handle non-standard TOTP codes
