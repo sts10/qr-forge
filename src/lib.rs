@@ -15,7 +15,7 @@ use std::error::Error;
 use std::fs::File;
 use std::io::Read;
 use std::io::{self, ErrorKind};
-use std::path::PathBuf;
+use std::path::Path;
 use std::str;
 
 pub fn draw_qr_code(output_file_path: Option<String>) {
@@ -49,8 +49,8 @@ pub fn draw_qr_code(output_file_path: Option<String>) {
     }
 }
 
-pub fn read_qr_code(qr_image_file: PathBuf) {
-    match read_codes_from_file(&qr_image_file) {
+pub fn read_qr_code(qr_image_file: &Path) {
+    match read_codes_from_file(qr_image_file) {
         Ok(codes) => {
             println!("Discovered {} code(s):", codes.len());
             for code in codes {
@@ -186,7 +186,7 @@ fn make_qr_code_image(otpauth_uri: &str, output_file_path: &str) -> Result<(), B
     Ok(())
 }
 
-fn read_codes_from_file(file_path: &PathBuf) -> Result<Vec<String>, Box<dyn Error>> {
+fn read_codes_from_file(file_path: &Path) -> Result<Vec<String>, Box<dyn Error>> {
     let mut file = File::open(file_path)?;
     let mut vec = Vec::new();
     match file.read_to_end(&mut vec) {

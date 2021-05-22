@@ -27,6 +27,6 @@ enum Opt {
 fn main() {
     match Opt::from_args() {
         Opt::Draw { output } => draw_qr_code(output),
-        Opt::Read { qr_image_file } => read_qr_code(qr_image_file),
+        Opt::Read { qr_image_file } => read_qr_code(&qr_image_file),
     }
 }
