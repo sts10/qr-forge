@@ -69,6 +69,10 @@ OPTIONS:
 
 This program's setting reading and creating TOTPs is hard-coded to some sensible default (30 seconds, one type of secret key, etc.). I also need to test it on image file types other than PNG.
 
+## Troubleshooting
+
+If generated codes aren't accepted by the online service, check to make sure your computer's time is accurate.
+
 ## Notes / reference
 
 Here are [the official specifications of the otpauth URI format from Google](https://github.com/google/google-authenticator/wiki/Key-Uri-Format), if helpful.
