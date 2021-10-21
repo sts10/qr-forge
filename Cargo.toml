@@ -1,13 +1,14 @@
 [package]
 name = "qrforge"
-version = "0.1.96"
+version = "0.2.0"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
 
 [dependencies]
 rpassword = "5"
 qrcode = "0.12"
-image = "0.23"
+image = "0.23.14"
+# image = "0.23"
 chrono = "0.4"
 data-encoding = "2.3"
 rust-crypto = "^0.2"

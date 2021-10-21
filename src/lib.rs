@@ -200,7 +200,7 @@ fn read_codes_from_file(file_path: &Path) -> Result<Vec<String>, Box<dyn Error>>
         }
     }
 
-    let image = image::load_from_memory(&vec).unwrap().to_luma();
+    let image = image::load_from_memory(&vec).unwrap().to_luma8();
 
     let mut quirc = match QrCoder::new() {
         Ok(code) => code,
