@@ -2,7 +2,7 @@
 name = "qrforge"
 version = "0.2.0"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 rpassword = "5"
