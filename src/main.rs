@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use qrforge::*;
 use std::path::PathBuf;
 
-/// Safely handle TOTP secrets and their QR codes
+/// Safely transform between 32-character TOTP secret keys and their QR codes
 #[derive(Parser)]
 #[clap(version, name = "qrforge")]
 struct Cli {

@@ -4,9 +4,9 @@ A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key
 
 ## The problem this tool tries to solve
 
-**QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. A service provides you with QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust?
+**QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. The online service provides you with a QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust? Taking a screenshot isn't ideal, both for convenience and security.
 
-QRForge accepts an image file of the QR code and displays or "reads" the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge read <qr_code_image_file_path.png>` 
+QRForge accepts an image file of the QR code and displays or "reads" the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge read <qr_code_image_file_path.png>`. 
 
 **TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate, or "draw", a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge draw`. You'll then be prompted to enter the secret and other information about the account. 
 
@@ -18,7 +18,7 @@ Honestly, I'm not sure. But since QRForge uses [rpassword](https://github.com/co
 
 ### Other solutions
 
-Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. If you can, I'd recommend using KeePassXC rather than this tool for managing your TOTP keys and QR codes.
+Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. **If you can, I'd recommend using KeePassXC rather than this tool for managing your TOTP keys and QR codes.**
 
 ## Installation/Setup
 
@@ -31,16 +31,16 @@ Alternatively: Clone repo, `cd` into repo directory, and run `cargo install --pa
 
 ```text
 USAGE:
-qrforge <SUBCOMMAND>
+    qrforge <SUBCOMMAND>
 
-FLAGS:
--h, --help       Prints help information
--V, --version    Prints version information
+OPTIONS:
+    -h, --help       Print help information
+    -V, --version    Print version information
 
 SUBCOMMANDS:
-draw    Draw a QR code from text secret, service, and username
-help    Prints this message or the help of the given subcommand(s) 
-read    Read a QR code image file to an OTPauth URI
+    draw    Draw a QR code from given TOTP text secret, service, and username
+    help    Print this message or the help of the given subcommand(s)
+    read    Read a QR code image file and prints OTPauth URI
 ```
 
 The `draw` subcommand has its own options, including `output`:
@@ -49,12 +49,10 @@ The `draw` subcommand has its own options, including `output`:
 USAGE:
     qrforge draw [OPTIONS]
 
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
 OPTIONS:
-    -o, --output <output>    Print created QR code to a file
+    -h, --help               Print help information
+    -o, --output <OUTPUT>    Print created QR code to a file. I'd suggest using a .png file
+                             extension
 ```
 
 ## Examples
