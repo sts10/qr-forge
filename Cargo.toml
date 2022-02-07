@@ -1,6 +1,6 @@
 [package]
 name = "qrforge"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
 
@@ -14,5 +14,4 @@ data-encoding = "2.3"
 rust-crypto = "^0.2"
 byteorder = "1"
 quirc = "0.0.1"
-# structopt = "0.3"
 clap = { version = "3.0.14", features = ["derive"] }
