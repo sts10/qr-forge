@@ -14,4 +14,5 @@ data-encoding = "2.3"
 rust-crypto = "^0.2"
 byteorder = "1"
 quirc = "0.0.1"
-structopt = "0.3"
+# structopt = "0.3"
+clap = { version = "3.0.14", features = ["derive"] }

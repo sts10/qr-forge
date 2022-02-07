@@ -1,32 +1,31 @@
-extern crate structopt;
 use qrforge::*;
 use std::path::PathBuf;
-use structopt::StructOpt;
+use clap::Parser;
 
-/// QR Forge
-#[derive(StructOpt, Debug)]
-#[structopt(name = "qrforge")]
-enum Opt {
+/// Safely handle TOTP secrets and their QR codes
+#[derive(Parser, Debug)]
+#[clap(version, name = "qrforge")]
+struct Args {
     /// Draw a QR code from TOTP text secret, service, and username
-    #[structopt(alias = "draw")]
-    Draw {
+    #[clap(alias = "draw")]
+    Draw: {
         /// Print created QR code to a file
-        #[structopt(short = "o", long = "output")]
+        #[clap(short = "o", long = "output")]
         output: Option<String>,
     },
 
     /// Read a QR code image file and prints OTPauth URI
-    #[structopt(alias = "read")]
-    Read {
+    #[clap(alias = "read")]
+    Read: {
         /// File path of QR image to read
-        #[structopt(name = "QR image", parse(from_os_str))]
+        #[clap(name = "QR image", parse(from_os_str))]
         qr_image_file: PathBuf,
     },
 }
 
 fn main() {
-    match Opt::from_args() {
-        Opt::Draw { output } => draw_qr_code(output),
-        Opt::Read { qr_image_file } => read_qr_code(&qr_image_file),
+    match Args::parse() {
+        Args::Draw { output } => draw_qr_code(output),
+        Args::Read { qr_image_file } => read_qr_code(&qr_image_file),
     }
 }
