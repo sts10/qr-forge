@@ -16,9 +16,10 @@ use std::fs::File;
 use std::io::Read;
 use std::io::{self, ErrorKind};
 use std::path::Path;
+use std::path::PathBuf;
 use std::str;
 
-pub fn draw_qr_code(output_file_path: Option<String>) {
+pub fn draw_qr_code(output_file_path: &Option<PathBuf>) {
     println!("Let's make a QR code");
     let key: String = get_key();
     // MVTGOZDHMRTGOZDGM5QWOZ3BM5TWOZ3H
@@ -39,9 +40,9 @@ pub fn draw_qr_code(output_file_path: Option<String>) {
 
     // If user wants to save the generated QR code to a file...
     if let Some(output_path) = output_file_path {
-        match make_qr_code_image(&otpauth_uri, &output_path) {
-            Ok(()) => println!(
-                "QR code image file successfully created at {}",
+        match make_qr_code_image(&otpauth_uri, output_path) {
+            Ok(()) => eprintln!(
+                "QR code image file successfully created at {:?}",
                 &output_path
             ),
             Err(e) => eprintln!("Error generating QR code image file: {}", e),
@@ -171,7 +172,7 @@ fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn 
     Ok(format!("{:0length$}", modulo, length = 6))
 }
 
-fn make_qr_code_image(otpauth_uri: &str, output_file_path: &str) -> Result<(), Box<dyn Error>> {
+fn make_qr_code_image(otpauth_uri: &str, output_file_path: &PathBuf) -> Result<(), Box<dyn Error>> {
     let code = QrCode::new(otpauth_uri)?;
     // Render the bits into an image.
     let image = code.render::<Luma<u8>>().build();
@@ -266,14 +267,15 @@ mod tests {
         let username = "test_user".to_string();
 
         let otpauth_uri = make_otpauth_uri(&key, service, username);
-        let qr_code_file = "test_qr_code.png";
+        let qr_code_file = PathBuf::from("test_qr_code.png");
 
-        match make_qr_code_image(&otpauth_uri, qr_code_file) {
+        match make_qr_code_image(&otpauth_uri, &qr_code_file) {
             Ok(file_path) => file_path,
             Err(e) => panic!("Error generating QR code image file: {}", e),
         };
 
-        let first_uri = &read_codes_from_file(&Path::new(qr_code_file).to_path_buf()).unwrap()[0];
+        // Woof, this is rough!
+        let first_uri = &read_codes_from_file(&Path::new(&qr_code_file).to_path_buf()).unwrap()[0];
         assert_eq!(first_uri, &otpauth_uri);
     }
 

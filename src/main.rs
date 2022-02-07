@@ -1,22 +1,29 @@
+use clap::{Parser, Subcommand};
 use qrforge::*;
 use std::path::PathBuf;
-use clap::Parser;
 
 /// Safely handle TOTP secrets and their QR codes
-#[derive(Parser, Debug)]
+#[derive(Parser)]
 #[clap(version, name = "qrforge")]
-struct Args {
-    /// Draw a QR code from TOTP text secret, service, and username
+struct Cli {
+    #[clap(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Draw a QR code from given TOTP text secret, service, and username
     #[clap(alias = "draw")]
-    Draw: {
-        /// Print created QR code to a file
-        #[clap(short = "o", long = "output")]
-        output: Option<String>,
+    Draw {
+        /// Print created QR code to a file. I'd suggest using a .png file
+        /// extension.
+        #[clap(short = 'o', long = "output")]
+        output: Option<PathBuf>,
     },
 
     /// Read a QR code image file and prints OTPauth URI
     #[clap(alias = "read")]
-    Read: {
+    Read {
         /// File path of QR image to read
         #[clap(name = "QR image", parse(from_os_str))]
         qr_image_file: PathBuf,
@@ -24,8 +31,9 @@ struct Args {
 }
 
 fn main() {
-    match Args::parse() {
-        Args::Draw { output } => draw_qr_code(output),
-        Args::Read { qr_image_file } => read_qr_code(&qr_image_file),
+    let cli = Cli::parse();
+    match &cli.command {
+        Commands::Draw { output } => draw_qr_code(output),
+        Commands::Read { qr_image_file } => read_qr_code(&qr_image_file),
     }
 }
