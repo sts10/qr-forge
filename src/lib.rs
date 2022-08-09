@@ -65,7 +65,7 @@ pub fn read_qr_code(qr_image_file: &Path) {
 fn get_key() -> String {
     loop {
         // get key from user safely, then make it uppercase and remove spaces
-        let key: String = rpassword::read_password_from_tty(Some("Enter the secret key:\n"))
+        let key: String = rpassword::prompt_password("Enter the secret key:\n")
             .expect("Error reading secret key")
             .to_ascii_uppercase()
             .chars()
