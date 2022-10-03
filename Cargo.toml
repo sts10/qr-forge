@@ -1,6 +1,6 @@
 [package]
 name = "qrforge"
-version = "0.2.3"
+version = "0.2.31"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
 
@@ -8,9 +8,8 @@ edition = "2021"
 rpassword = "7"
 qrcode = "0.12"
 image = "0.23"
-chrono = "0.4"
+chrono = "0.4.22"
 data-encoding = "2.3"
-# rust-crypto = "^0.2"
 sha1 = "0.10"
 hmac = "0.12.1"
 byteorder = "1"
