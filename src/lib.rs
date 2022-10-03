@@ -5,8 +5,8 @@ extern crate rpassword;
 
 use byteorder::{BigEndian, ByteOrder};
 use chrono::Local;
-use crypto::mac::Mac;
-use crypto::{hmac::Hmac, sha1::Sha1};
+// use crypto::mac::Mac;
+// use crypto::{hmac::Hmac, sha1::Sha1};
 use data_encoding::BASE32;
 use image::Luma;
 use qrcode::QrCode;
@@ -127,6 +127,10 @@ fn validate_key(key: &str) -> Result<(), Box<dyn Error>> {
     }
 }
 
+use hmac::Hmac;
+use hmac::Mac;
+use sha1::Sha1;
+
 // I definitely copy and pasted this from somewhere else
 fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn Error>> {
     let now = Local::now().timestamp();
@@ -143,11 +147,12 @@ fn generate_otp_token(key: &str, future_seconds: i64) -> Result<String, Box<dyn 
         }
     };
     let mut buf = [0; 8];
-    let mut hm = Hmac::new(Sha1::new(), &bytes[..]);
+    // From https://docs.rs/hmac/latest/hmac/
+    let mut hm = Hmac::<Sha1>::new_from_slice(&bytes[..]).unwrap();
     BigEndian::write_u64(&mut buf, timer);
-    hm.input(&buf[..]);
-    let res = hm.result();
-    let result = res.code();
+    hm.update(&buf[..]);
+    let res = hm.finalize(); // hm.result();
+    let result = res.into_bytes(); //res.code();
     let offset = match &result.last() {
         Some(l) => *l & 0xf,
         None => {
