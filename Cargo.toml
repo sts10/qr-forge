@@ -1,6 +1,6 @@
 [package]
 name = "qrforge"
-version = "0.2.31"
+version = "0.2.32"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
 
