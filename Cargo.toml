@@ -1,6 +1,6 @@
 [package]
 name = "qrforge"
-version = "0.2.32"
+version = "0.2.33"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
 
@@ -14,4 +14,4 @@ sha1 = "0.10"
 hmac = "0.12.1"
 byteorder = "1"
 quirc = "0.0.1"
-clap = { version = "3.2", features = ["derive"] }
+clap = { version = "4.0", features = ["derive"] }

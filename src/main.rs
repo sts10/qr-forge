@@ -25,7 +25,7 @@ enum Commands {
     #[clap(alias = "read")]
     Read {
         /// File path of QR image to read
-        #[clap(name = "QR image", parse(from_os_str))]
+        #[clap(name = "QR image")]
         qr_image_file: PathBuf,
     },
 }
