@@ -77,6 +77,8 @@ Here are [the official specifications of the otpauth URI format from Google](htt
 
 Before I wrote this code, I wrote [a blog post](https://sts10.github.io/2018/11/26/totp-uris-qr-codes-2-factor.html) that might help you understand the problems I'm interested in here. 
 
+If you're just trying to create a QR code that points to a website (not a TOTP key), try [Dead Simple QR Code Generator](https://httpbin.dmuth.org/qrcode/) by dmuth.
+
 ## To do 
 
 - [x] Add ability to generate a few 6-digit codes, allowing users to confirm everything went right. See [this function](https://github.com/Skarlso/totp/blob/master/src/generator.rs#L9) for clues on how to do this.
