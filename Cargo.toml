@@ -7,12 +7,12 @@ license = "MIT"
 
 [dependencies]
 rpassword = "7.2.0"
-qrcode = "0.12"
-image = "0.23"
-chrono = "0.4.23"
+qrcode = "0.12.0"
+image = "0.23" # Need to do some work to upgrade this
+chrono = "0.4.24"
 data-encoding = "2.3.3"
-sha1 = "0.10"
+sha1 = "0.10.5"
 hmac = "0.12.1"
-byteorder = "1"
+byteorder = "1.4.3"
 quirc = "0.0.1"
-clap = { version = "4.0.32", features = ["derive"] }
+clap = { version = "4.2.2", features = ["derive"] }
