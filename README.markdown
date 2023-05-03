@@ -6,7 +6,7 @@ A Rust CLI to more safely generate a QR code from a 32-character TOTP secret key
 
 **QR code --> TOTP secret key**: You're enabling two-factor authentication on an online account. The online service provides you with a QR code for you to take a photo of with your phone's authentication app (like Google Authenticator). That's all fine and good, but what if you want to save this QR code (or really, the secret key it contains) somewhere else, or share it with someone you trust? Taking a screenshot isn't ideal, both for convenience and security.
 
-QRForge accepts an image file of the QR code and displays or "reads" the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge read <qr_code_image_file_path.png>`.
+QRForge accepts an image file of the QR code and displays, or "reads," the discovered 32-character string that is the TOTP secret key, which you can write down on paper or paste into a password manager. To do this, you'd run `qrforge read <qr_code_image_file_path.png>`.
 
 **TOTP secret key --> QR code**: You've got a 32-character TOTP secret and, for convenience, you want to generate, or "draw", a QR code so you can get it into your phone's authentication app. You can do this with QRForge by running `qrforge draw`. You'll then be prompted to enter the secret and other information about the account.
 
@@ -18,7 +18,7 @@ Honestly, I'm not sure. But since QRForge uses [rpassword](https://github.com/co
 
 ### Other solutions
 
-Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. **If you can, I'd recommend using KeePassXC rather than this tool for managing your TOTP keys and QR codes.**
+Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. **If you can, I'd recommend using the latest version of KeePassXC rather than this tool for managing your TOTP keys and QR codes.** KeePassXC [has now been audited](https://keepassxc.org/blog/2023-04-15-audit-report/), and it generally has a lot more eyes on its code.
 
 ## Installation/Setup
 
