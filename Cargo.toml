@@ -1,8 +1,9 @@
 [package]
 name = "qrforge"
-version = "0.2.34"
+version = "0.2.35"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
+license = "MPL-2.0"
 
 [dependencies]
 rpassword = "7.2.0"
