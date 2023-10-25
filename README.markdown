@@ -12,11 +12,11 @@ QRForge accepts an image file of the QR code and displays, or "reads," the disco
 
 After you get through some prompts, a QR code will be displayed in your terminal. You'll also be given the choice to save the QR code to an image file.
 
-### But is it actually secure?
+## But is it actually secure?
 
 Honestly, I'm not sure. But since QRForge uses [rpassword](https://github.com/conradkdotcom/rpassword) to take in the secret key, I figure it's better than using a generic tool for creating QR codes, like qrencode, which may store your secret key in your shell's history and potentially elsewhere.
 
-### Other solutions
+## Other solutions
 
 Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can generate TOTP QR codes (see [FAQ](https://keepassxc.org/docs/#faq-security-totp) and [relevant pull request](https://github.com/keepassxreboot/keepassxc/issues/1167)) and more. **If you can, I'd recommend using the latest version of KeePassXC rather than this tool for managing your TOTP keys and QR codes.** KeePassXC [has now been audited](https://keepassxc.org/blog/2023-04-15-audit-report/), and it generally has a lot more eyes on its code.
 
