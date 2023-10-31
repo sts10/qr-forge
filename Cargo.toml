@@ -4,6 +4,9 @@ version = "0.2.36"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"
+repository = "https://github.com/sts10/qr-forge"
+readme = "README.markdown"
+description = "Safely transform between 32-character TOTP secret keys and their QR codes"
 
 [dependencies]
 rpassword = "7.2.0"
