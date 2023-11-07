@@ -23,9 +23,13 @@ Know that [KeePassXC version 2.4.0 and above](https://keepassxc.org/) can genera
 ## Installation/Setup
 
 1. [Install Rust](https://www.rust-lang.org/tools/install) if you haven't already
-2. `cargo install --git https://github.com/sts10/qr-forge --branch main`
+2. `cargo install --git https://github.com/sts10/qr-forge --locked --branch main`
 
-Alternatively: Clone repo, `cd` into repo directory, and run `cargo install --path=.`
+Alternatively: Clone repo, `cd` into repo directory, and run `cargo install --path=. --locked`.
+
+To update QR Forge, re-run the same command. 
+
+To uninstall, run `cargo uninstall qr-forge`.
 
 ## Usage
 
