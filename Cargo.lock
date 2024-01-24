@@ -544,7 +544,7 @@ dependencies = [
 
 [[package]]
 name = "qrforge"
-version = "0.2.36"
+version = "0.2.37"
 dependencies = [
  "byteorder",
  "chrono",
