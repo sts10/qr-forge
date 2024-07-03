@@ -11,14 +11,14 @@ description = "Safely transform between 32-character TOTP secret keys and their 
 [dependencies]
 qrcode = "0.14.0"
 image = "0.25.1"
-chrono = "0.4.30"
-rpassword = "7.2.0"
-data-encoding = "2.4.0"
-sha1 = "0.10.5"
+chrono = "0.4.38"
+rpassword = "7.3.1"
+data-encoding = "2.6.0"
+sha1 = "0.10.6"
 hmac = "0.12.1"
-byteorder = "1.4.3"
+byteorder = "1.5.0"
 quirc = "0.0.1"
-clap = { version = "4.4.2", features = ["derive"] }
+clap = { version = "4.5.8", features = ["derive"] }
 
 # The profile that 'cargo dist' will build with
 [profile.dist]
