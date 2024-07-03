@@ -1,6 +1,6 @@
 [package]
 name = "qrforge"
-version = "0.2.38"
+version = "0.2.39"
 authors = ["Sam Schlinkert <sschlinkert@gmail.com>"]
 edition = "2021"
 license = "MPL-2.0"
