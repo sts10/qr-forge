@@ -1,3 +1,6 @@
+# v0.2.39
+* Update almost all dependencies, including image and qrcode (#4)
+
 # v0.2.38
 
 * Uses [cargo-dist](https://github.com/axodotdev/cargo-dist) to create binaries and an installation shell script.
