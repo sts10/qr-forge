@@ -9,10 +9,10 @@ readme = "README.markdown"
 description = "Safely transform between 32-character TOTP secret keys and their QR codes"
 
 [dependencies]
-rpassword = "7.2.0"
-qrcode = "0.12.0"
-image = "0.23" # Need to do some work to upgrade this
+qrcode = "0.14.0"
+image = "0.25.1"
 chrono = "0.4.30"
+rpassword = "7.2.0"
 data-encoding = "2.4.0"
 sha1 = "0.10.5"
 hmac = "0.12.1"
